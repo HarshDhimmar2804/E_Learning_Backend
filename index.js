@@ -7,8 +7,8 @@ import cors from "cors";
 dotenv.config();
 
 export const instance = new Razorpay({
-  key_id: process.env.Razorpay_Key,
-  key_secret: process.env.Razorpay_Secret,
+  key_id: process.env.Razorpay_key,
+  key_secret: process.env.Razorpay_secret,
 });
 
 const app = express();
