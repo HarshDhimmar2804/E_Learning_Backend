@@ -4,7 +4,7 @@ import { connectDb } from "./database/db.js";
 import Razorpay from "razorpay";
 import cors from "cors";
 
-dotenv.config({ path: path.resolve(__dirname, "../src/.env") });
+dotenv.config();
 
 export const instance = new Razorpay({
   key_id: process.env.Razorpay_Key,
