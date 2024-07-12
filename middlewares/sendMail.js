@@ -89,30 +89,42 @@ export const sendForgotMail = async (subject, data) => {
       background-color: #f3f3f3;
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .container {
       background-color: #ffffff;
-      padding: 20px;
-      margin: 20px auto;
+      padding: 30px;
+      margin: 20px;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
     }
     h1 {
-      color: #5a2d82;
+      color: #6c63ff; /* New color for h1 */
+      margin-bottom: 20px;
     }
     p {
       color: #666666;
+      margin-bottom: 20px;
     }
     .button {
       display: inline-block;
       padding: 15px 25px;
       margin: 20px 0;
-      background-color: #5a2d82;
+      background-color: #6c63ff; /* Matching color for button */
       color: white;
       text-decoration: none;
       border-radius: 4px;
       font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #524bd4; /* Darker shade for hover effect */
     }
     .footer {
       margin-top: 20px;
@@ -120,8 +132,12 @@ export const sendForgotMail = async (subject, data) => {
       text-align: center;
     }
     .footer a {
-      color: #5a2d82;
+      color: #6c63ff; /* Matching color for footer links */
       text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer a:hover {
+      color: #524bd4; /* Darker shade for hover effect */
     }
   </style>
 </head>
@@ -133,8 +149,8 @@ export const sendForgotMail = async (subject, data) => {
     <a href="${process.env.frontendurl}/reset-password/${data.token}" class="button">Reset Password</a>
     <p>If you did not request this, please ignore this email.</p>
     <div class="footer">
-      <p>Thank you,<br>Your Website Team</p>
-      <p><a href="https://yourwebsite.com">yourwebsite.com</a></p>
+      <p>Thank you,<br>E-Learning</p>
+      <p><a href="${process.env.frontendurl}">E-Learning.com</a></p>
     </div>
   </div>
 </body>
