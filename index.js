@@ -19,7 +19,7 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-app.use(express.static(path.resolve(__dirname, "../frontend/dist")));
+app.use(express.static(path.resolve(__dirname, "./dist")));
 // using middlewares
 app.use(express.json());
 app.use(cors());
@@ -43,7 +43,7 @@ app.use("/api", courseRoutes);
 app.use("/api", adminRoutes);
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../frontend/dist", "index.html"));
+  res.sendFile(path.resolve(__dirname, "./dist", "index.html"));
 });
 
 app.listen(port, () => {
