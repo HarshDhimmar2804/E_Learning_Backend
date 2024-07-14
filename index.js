@@ -3,9 +3,6 @@ import dotenv from "dotenv";
 import { connectDb } from "./database/db.js";
 import Razorpay from "razorpay";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 dotenv.config();
 
@@ -16,10 +13,6 @@ export const instance = new Razorpay({
 
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-app.use(express.static(path.resolve(__dirname, "./dist")));
 // using middlewares
 app.use(express.json());
 app.use(cors());
@@ -41,11 +34,6 @@ import adminRoutes from "./routes/admin.js";
 app.use("/api", userRoutes);
 app.use("/api", courseRoutes);
 app.use("/api", adminRoutes);
-
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./dist", "index.html"));
-  console.log("hello");
-});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
