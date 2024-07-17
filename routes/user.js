@@ -18,7 +18,7 @@ router.post("/user/login", loginUser);
 router.get("/user/me", isAuth, myProfile);
 router.post("/user/forgot", forgotPassword);
 router.post("/user/reset", resetPassword);
-router.post("/user/progress", addProgress);
-router.get("/user/progress", getYourProgress);
+router.post("/user/progress", isAuth, addProgress);
+router.get("/user/progress", isAuth, getYourProgress);
 
 export default router;

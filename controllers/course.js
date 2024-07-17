@@ -133,67 +133,46 @@ export const paymentVerification = TryCatch(async (req, res) => {
 });
 
 export const addProgress = TryCatch(async (req, res) => {
-  const { course, lectureId } = req.query;
-  if (!course || !lectureId) {
-    return res
-      .status(400)
-      .json({ message: "Missing course or lectureId in query parameters" });
-  }
-
   const progress = await Progress.findOne({
     user: req.user._id,
-    course,
+    course: req.query.course,
   });
 
-  if (!progress) {
-    return res
-      .status(404)
-      .json({ message: "Progress not found for the specified course" });
-  }
+  const { lectureId } = req.query;
 
   if (progress.completedLectures.includes(lectureId)) {
     return res.json({
-      message: "Progress already recorded for this lecture",
+      message: "Progress recorded",
     });
   }
 
   progress.completedLectures.push(lectureId);
+
   await progress.save();
 
   res.status(201).json({
-    message: "New progress added",
+    message: "new Progress added",
   });
 });
 
 export const getYourProgress = TryCatch(async (req, res) => {
-  const { course } = req.query;
-  if (!course) {
-    return res
-      .status(400)
-      .json({ message: "Missing course in query parameters" });
-  }
-
-  const progressArray = await Progress.find({
+  const progress = await Progress.find({
     user: req.user._id,
-    course,
+    course: req.query.course,
   });
 
-  if (progressArray.length === 0) {
-    return res
-      .status(404)
-      .json({ message: "No progress found for the specified course" });
-  }
+  if (!progress) return res.status(404).json({ message: "null" });
 
-  const progress = progressArray[0];
-  const allLecturesCount = await Lecture.countDocuments({ course });
-  const completedLecturesCount = progress.completedLectures.length;
-  const courseProgressPercentage =
-    (completedLecturesCount * 100) / allLecturesCount;
+  const allLectures = (await Lecture.find({ course: req.query.course })).length;
+
+  const completedLectures = progress[0].completedLectures.length;
+
+  const courseProgressPercentage = (completedLectures * 100) / allLectures;
 
   res.json({
     courseProgressPercentage,
-    completedLectures: completedLecturesCount,
-    allLectures: allLecturesCount,
+    completedLectures,
+    allLectures,
     progress,
   });
 });
