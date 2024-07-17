@@ -45,11 +45,23 @@ const uploadFiles = multer({ storage }).single("file");
 // Routes
 app.post("/upload", (req, res) => {
   uploadFiles(req, res, (err) => {
-    if (err) {
-      console.error("Upload error: ", err);
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
       return res.status(500).json({ error: err.message });
+    } else if (err) {
+      // An unknown error occurred when uploading.
+      return res
+        .status(500)
+        .json({ error: "An error occurred during file upload" });
     }
-    res.status(200).json({ file: req.file });
+
+    // Everything went fine.
+    res
+      .status(200)
+      .json({
+        message: "File uploaded successfully",
+        fileName: req.file.filename,
+      });
   });
 });
 
