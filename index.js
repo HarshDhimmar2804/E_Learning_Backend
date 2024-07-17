@@ -7,6 +7,7 @@ import multer from "multer";
 import { v4 as uuid } from "uuid";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 // Workaround for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -25,14 +26,25 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Ensure the uploads directory exists
+const uploadDir = path.resolve(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+  console.log("Uploads directory created");
+} else {
+  console.log("Uploads directory exists");
+}
+
 // Set static folder
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(uploadDir));
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, "uploads");
+    console.log("Setting destination to uploads directory");
+    cb(null, uploadDir);
   },
   filename(req, file, cb) {
+    console.log("Generating unique filename");
     const id = uuid();
     const extName = file.originalname.split(".").pop();
     const fileName = `${id}.${extName}`;
@@ -46,22 +58,21 @@ const uploadFiles = multer({ storage }).single("file");
 app.post("/upload", (req, res) => {
   uploadFiles(req, res, (err) => {
     if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
+      console.error("Multer error:", err);
       return res.status(500).json({ error: err.message });
     } else if (err) {
-      // An unknown error occurred when uploading.
+      console.error("Unknown error:", err);
       return res
         .status(500)
         .json({ error: "An error occurred during file upload" });
     }
 
     // Everything went fine.
-    res
-      .status(200)
-      .json({
-        message: "File uploaded successfully",
-        fileName: req.file.filename,
-      });
+    console.log("File uploaded successfully:", req.file.filename);
+    res.status(200).json({
+      message: "File uploaded successfully",
+      fileName: req.file.filename,
+    });
   });
 });
 
