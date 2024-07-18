@@ -76,6 +76,31 @@ app.post("/upload", (req, res) => {
   });
 });
 
+app.delete("/delete/:filename", (req, res) => {
+  const filePath = path.join(uploadDir, req.params.filename);
+
+  // Log the file path
+  console.log("Attempting to delete file:", filePath);
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      if (err.code === "ENOENT") {
+        // File does not exist
+        console.error("File does not exist:", filePath);
+        return res.status(404).json({ error: "File not found" });
+      }
+      // Other errors
+      console.error("Error deleting file:", err);
+      return res
+        .status(500)
+        .json({ error: "An error occurred during file deletion" });
+    }
+
+    console.log("File deleted successfully:", filePath);
+    res.status(200).json({ message: "File deleted successfully" });
+  });
+});
+
 app.get("/", (req, res) => {
   res.send("Server is working");
 });
